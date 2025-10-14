@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蔡琦浚的個人作品集</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      scroll-behavior: smooth;
+    }
+
+    /* 主題色調統一：primary 藍色系 */
+    .theme-gradient {
+      background: linear-gradient(135deg, #007bff, #00bfff);
+      color: white;
+    }
+
+    /* 交替背景色 */
+    section:nth-of-type(odd) {
+      background-color: #ffffff;
+    }
+
+    section:nth-of-type(even) {
+      background-color: #f8f9fa;
+    }
+
+    /* 卡片 hover 效果 */
+    .card:hover {
+      transform: translateY(-5px);
+      transition: 0.3s;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .card img {
+      height: 220px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 1. 導航列 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Leo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">首頁</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">關於</a></li>
+          <li class="nav-item"><a class="nav-link" href="#portfolio">作品</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">聯絡</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 2. Hero Section -->
+  <section id="home" class="theme-gradient py-5 text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold">你好，我是蔡琦浚</h1>
+      <p class="lead mb-4">淡江大學資管系大三轉學生，目前在為畢業專題感到焦慮。</p>
+      <a href="#portfolio" class="btn btn-light btn-lg me-2">查看作品</a>
+      <a href="#contact" class="btn btn-outline-light btn-lg">聯絡我</a>
+    </div>
+  </section>
+
+  <!-- 3. 關於我 -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">關於我</h2>
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center mb-4 mb-md-0">
+          <img src="image3.jpeg" alt="個人照片" class="img-fluid rounded-circle shadow">
+        </div>
+        <div class="col-md-6">
+          <h3 class="fw-bold">Hi，我是蔡琦浚 👋</h3>
+          <p class="text-secondary fs-5">淡江大學資管系大三學生，正在學習英文、網頁設計。</p>
+          <p class="fw-semibold text-primary">興趣：上網路程式設計課、桌球、旅行、健身。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 技能展示 -->
+  <section id="skills" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">我的技能</h2>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <i class="bi bi-code-slash display-5 text-primary"></i>
+              <h5 class="card-title mt-3">網頁設計</h5>
+              <p class="card-text">熟悉 HTML、CSS 建立響應式網頁。</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <i class="bi bi-server display-5 text-success"></i>
+              <h5 class="card-title mt-3">電腦軟體應用</h5>
+              <p class="card-text">善用 word、excel、canva 等文書處理。</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <i class="bi bi-bar-chart display-5 text-warning"></i>
+              <h5 class="card-title mt-3">Iso 27001主導稽核員</h5>
+              <p class="card-text">協助企業建立、實施和維護一個系統化的資訊安全管理系統(ISMS)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 作品集（只保留3個） -->
+  <section id="portfolio" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">作品集</h2>
+      <div class="row">
+        <!-- 作品 1 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <img src="Portfolio Section1.jpeg" class="card-img-top img-fluid" alt="GitHub 應用">
+            <div class="card-body">
+              <h5 class="card-title">GitHub 應用</h5>
+              <p class="card-text">GitHub倉庫建立，以及如何應用。</p>
+              <a href="#" class="btn btn-outline-primary btn-sm">查看詳情</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 作品 2 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <img src="Portfolio Section2.jpeg" class="card-img-top img-fluid" alt="線上購物訂單處理系統">
+            <div class="card-body">
+              <h5 class="card-title">線上購物訂單處理系統</h5>
+              <p class="card-text">使用者可以進行結帳，填寫運送資訊與付款，管理員可以新增、修改、刪除商品資訊。</p>
+              <a href="#" class="btn btn-outline-primary btn-sm">查看詳情</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 作品 3 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <img src="Portfolio Section3.jpeg" class="card-img-top img-fluid" alt="醫療微服務生態系統">
+            <div class="card-body">
+              <h5 class="card-title">醫療微服務生態系統</h5>
+              <p class="card-text">提供病患一個整合個人基本資料與健康指標的數位平台。</p>
+              <a href="#" class="btn btn-outline-primary btn-sm">查看詳情</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 聯絡表單 -->
+  <section id="contact" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">聯絡我</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <form>
+            <div class="mb-3">
+              <label for="name" class="form-label">姓名</label>
+              <input type="text" class="form-control" id="name" placeholder="請輸入姓名">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="example@gmail.com">
+            </div>
+            <div class="mb-3">
+              <label for="subject" class="form-label">主旨</label>
+              <input type="text" class="form-control" id="subject" placeholder="請輸入主旨">
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label">訊息</label>
+              <textarea class="form-control" id="message" rows="5" placeholder="想說的話..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">送出</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <p class="mb-2">
+      <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
+    </p>
+    <p class="mb-0">&copy; 2025 蔡琦浚 | 個人作品集</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
