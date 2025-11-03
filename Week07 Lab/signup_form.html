@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Week07 會員註冊</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-light py-4">
+  <div class="container">
+    <h2 class="mb-3">會員註冊表單</h2>
+    <p class="text-muted">請填寫以下資料（*為必填）。</p>
+
+    <form id="signup-form" class="card shadow-sm" novalidate>
+      <div class="card-body">
+
+        <!-- 姓名 -->
+        <div class="mb-3">
+          <label class="form-label" for="name">姓名 *</label>
+          <input id="name" name="name" class="form-control" type="text"
+                 required aria-describedby="name-error" autocomplete="name" />
+          <p id="name-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label" for="email">Email *</label>
+          <input id="email" name="email" class="form-control" type="email"
+                 required aria-describedby="email-error" autocomplete="email" inputmode="email" />
+          <p id="email-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </div>
+
+        <!-- 手機 -->
+        <div class="mb-3">
+          <label class="form-label" for="phone">手機（10 碼）*</label>
+          <input id="phone" name="phone" class="form-control" type="tel"
+                 pattern="^09\\d{8}$" required
+                 title="請輸入 09 開頭的 10 碼手機"
+                 aria-describedby="phone-error" inputmode="numeric" />
+          <p id="phone-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </div>
+
+        <!-- 密碼 -->
+        <div class="mb-3">
+          <label class="form-label" for="password">密碼（至少 8 碼，英數混合）*</label>
+          <input id="password" name="password" class="form-control" type="password"
+                 minlength="8" required aria-describedby="password-help password-error"
+                 autocomplete="new-password" />
+          <div id="password-help" class="form-text">需至少 8 碼，包含英文字母與數字。</div>
+
+          <!-- 強度條 -->
+          <div class="progress mt-2 strength-progress" role="progressbar" aria-hidden="true">
+            <div id="strength-bar" class="progress-bar" style="width:0%"></div>
+          </div>
+          <p id="strength-text" class="small text-muted mb-0"></p>
+
+          <p id="password-error" class="text-danger small mb-0 mt-1" aria-live="polite"></p>
+        </div>
+
+        <!-- 確認密碼 -->
+        <div class="mb-3">
+          <label class="form-label" for="confirm">確認密碼 *</label>
+          <input id="confirm" name="confirm" class="form-control" type="password"
+                 required aria-describedby="confirm-error" autocomplete="new-password" />
+          <p id="confirm-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </div>
+
+        <!-- 興趣標籤（事件委派） -->
+        <fieldset class="mb-3">
+          <legend class="fs-6 mb-2">興趣標籤（至少勾 1 項）*</legend>
+          <div id="tags" class="d-flex flex-wrap gap-2" aria-describedby="tags-error">
+            <!-- event delegation on parent -->
+            <label class="btn btn-outline-secondary btn-sm tag-item">
+              <input class="visually-hidden" type="checkbox" value="前端" /> 前端
+            </label>
+            <label class="btn btn-outline-secondary btn-sm tag-item">
+              <input class="visually-hidden" type="checkbox" value="後端" /> 後端
+            </label>
+            <label class="btn btn-outline-secondary btn-sm tag-item">
+              <input class="visually-hidden" type="checkbox" value="AI/ML" /> AI/ML
+            </label>
+            <label class="btn btn-outline-secondary btn-sm tag-item">
+              <input class="visually-hidden" type="checkbox" value="資料庫" /> 資料庫
+            </label>
+            <label class="btn btn-outline-secondary btn-sm tag-item">
+              <input class="visually-hidden" type="checkbox" value="手機開發" /> 手機開發
+            </label>
+          </div>
+          <p id="tags-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </fieldset>
+
+        <!-- 條款 -->
+        <div class="form-check mb-3">
+          <input id="agree" class="form-check-input" type="checkbox"
+                 required aria-describedby="agree-error" />
+          <label class="form-check-label" for="agree">我已閱讀並同意服務條款 *</label>
+          <p id="agree-error" class="text-danger small mb-0" aria-live="polite"></p>
+        </div>
+
+        <!-- 動作 -->
+        <div class="d-flex gap-2">
+          <button id="submit-btn" class="btn btn-primary" type="submit">送出</button>
+          <button id="reset-btn" class="btn btn-outline-secondary" type="button">重設</button>
+        </div>
+
+        <div id="msg" class="mt-3" aria-live="polite"></div>
+      </div>
+    </form>
+  </div>
+
+  <script src="signup_form.js"></script>
+</body>
+</html>

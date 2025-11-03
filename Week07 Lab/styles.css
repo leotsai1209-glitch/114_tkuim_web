@@ -1,0 +1,38 @@
+/* Week07_Lab / styles.css */
+
+/* 密碼強度條高度 */
+.strength-progress {
+  height: 6px;
+}
+
+/* 送出中按鈕的微動畫 */
+button.loading {
+  position: relative;
+  pointer-events: none;
+}
+button.loading::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: transparent;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 興趣標籤樣式微調 */
+#tags .tag-item {
+  user-select: none;
+}
+
+/* 表單卡片 */
+#signup-form .card-body {
+  padding: 1.25rem 1.25rem 1.5rem;
+}
