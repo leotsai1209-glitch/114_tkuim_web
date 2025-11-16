@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+              <!-- 跑馬燈區 -->
+<div class="marquee text-white bg-primary py-2">
+  <marquee behavior="scroll" direction="left" scrollamount="8">
+    歡迎光臨淡江飯店！現在訂房享有早鳥優惠!
+  </marquee>
+</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>淡江飯店｜線上訂房系統</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+
+<body class="bg-light">
+  <!-- 導覽列 Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">淡江飯店</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarNav" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="#rooms">房型一覽</a></li>
+          <li class="nav-item"><a class="nav-link" href="#booking">線上訂房</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">關於我們</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 首頁 Hero 區 -->
+  <header class="hero text-dark py-5 text-center">
+    <div class="container">
+      <h1 class="fw-bold mb-3">淡江飯店線上訂房系統</h1>
+      <p class="lead mb-4">挑選房型、即時計價、線上填寫資料與送出確認。</p>
+      <a href="#rooms" class="btn btn-outline-secondary me-2">瀏覽房型</a>
+      <a href="#booking" class="btn btn-primary">立即訂房</a>
+    </div>
+  </header>
+
+  <!-- 房型一覽區 -->
+  <main class="container py-4">
+    <section id="rooms" class="my-4">
+      <h2 class="fw-bold mb-3">房型一覽 <span id="room-count" class="badge bg-secondary">0 間</span></h2>
+
+      <!-- 篩選條件 -->
+      <div class="row g-2 mb-3">
+        <div class="col-md-3">
+          <select id="filter-type" class="form-select">
+            <option value="">全部房型</option>
+            <option value="standard">標準房</option>
+            <option value="deluxe">豪華房</option>
+            <option value="suite">套房</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select id="filter-breakfast" class="form-select">
+            <option value="">早餐不限</option>
+            <option value="1">含早餐</option>
+            <option value="0">不含早餐</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <input id="filter-price" type="number" class="form-control" placeholder="最高價 (NT$)">
+        </div>
+        <div class="col-md-3 text-end">
+          <button id="filter-reset" class="btn btn-outline-secondary me-1">清除篩選</button>
+          <button id="show-favs" class="btn btn-outline-primary me-1">只看收藏</button>
+          <button id="clear-favs" class="btn btn-outline-danger">清空收藏</button>
+        </div>
+      </div>
+
+      <!-- 房型卡片區 -->
+      <div id="room-grid" class="row g-4"></div>
+    </section>
+
+    <hr class="my-5">
+
+    <!-- 線上訂房表單 -->
+    <section id="booking" class="my-4">
+      <h3 class="fw-bold mb-3">線上訂房</h3>
+      <form id="booking-form" novalidate>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label" for="guestName">姓名</label>
+            <input id="guestName" type="text" class="form-control" required aria-describedby="guestName-err">
+            <p id="guestName-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="email">Email</label>
+            <input id="email" type="email" class="form-control" required aria-describedby="email-err">
+            <p id="email-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="phone">手機</label>
+            <input id="phone" type="tel" class="form-control" required aria-describedby="phone-err">
+            <p id="phone-err" class="text-danger small"></p>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-4">
+            <label class="form-label" for="roomType">房型</label>
+            <select id="roomType" class="form-select" required aria-describedby="roomType-err"></select>
+            <p id="roomType-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="checkin">入住日期</label>
+            <input id="checkin" type="date" class="form-control" required aria-describedby="checkin-err">
+            <p id="checkin-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="checkout">退房日期</label>
+            <input id="checkout" type="date" class="form-control" required aria-describedby="checkout-err">
+            <p id="checkout-err" class="text-danger small"></p>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-2">
+            <label class="form-label" for="rooms">房間數</label>
+            <input id="rooms" type="number" class="form-control" min="1" max="5" aria-describedby="rooms-err">
+            <p id="rooms-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" for="adults">大人</label>
+            <input id="adults" type="number" class="form-control" min="1" max="10" aria-describedby="adults-err">
+            <p id="adults-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" for="children">孩童</label>
+            <input id="children" type="number" class="form-control" min="0" max="10" aria-describedby="children-err">
+            <p id="children-err" class="text-danger small"></p>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="breakfast">早餐加購</label>
+            <select id="breakfast" class="form-select">
+              <option value="none">不加購</option>
+              <option value="adult">僅大人</option>
+              <option value="all">全員</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">預估金額</label>
+            <p id="price" class="form-control-plaintext fw-bold mb-0">NT$ 0</p>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label" for="note">備註</label>
+          <textarea id="note" class="form-control" rows="3" maxlength="200" aria-describedby="note-count"></textarea>
+          <div id="note-count" class="form-text">0 / 200</div>
+        </div>
+
+        <div class="form-check mt-3">
+          <input id="agree" class="form-check-input" type="checkbox">
+          <label class="form-check-label" for="agree">我已閱讀並同意訂房條款</label>
+          <p id="agree-err" class="text-danger small"></p>
+        </div>
+
+        <div class="mt-4">
+          <button id="book-btn" type="submit" class="btn btn-primary me-2">送出訂單</button>
+          <button id="reset-btn" type="button" class="btn btn-outline-secondary">重設</button>
+        </div>
+
+        <div id="form-msg" class="mt-3"></div>
+      </form>
+    </section>
+
+    <!-- 成為會員 區塊（含密碼與強度） -->
+    <section id="member" class="my-5">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="fw-bold mb-3">成為淡江會員</h3>
+
+          <form id="member-form" novalidate>
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label class="form-label" for="m-email">Email</label>
+                <input id="m-email" type="email" class="form-control" required aria-describedby="m-email-err">
+                <p id="m-email-err" class="text-danger small"></p>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="m-password">設定密碼</label>
+                <input id="m-password" type="password" class="form-control" required aria-describedby="m-pass-err">
+                <p id="m-pass-err" class="text-danger small"></p>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">密碼強度</label>
+                <div class="progress" style="height: 10px;">
+                  <div id="pw-strength" class="progress-bar" role="progressbar"></div>
+                </div>
+                <p id="pw-strength-text" class="small mt-1 text-muted"></p>
+              </div>
+
+            </div>
+
+            <div class="mt-3 text-end">
+              <button type="submit" class="btn btn-outline-primary">加入會員</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 關於我們 -->
+    <section id="about" class="my-5">
+      <h3 class="fw-bold mb-2">關於淡江飯店</h3>
+      <p class="text-muted">
+        淡江飯店提供舒適的住宿與友善的服務，位於交通便利的地點，
+        讓您享受輕鬆愉快的旅程體驗。
+      </p>
+    </section>
+  </main>
+
+  <!-- Bootstrap 與 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js" defer></script>
+  <!-- Footer 區 -->
+<footer class="footer bg-primary text-white mt-5 py-3">
+  <div class="container text-center">
+    <p class="mb-1 fw-bold">淡江飯店 Tamkang Hotel</p>
+    <p class="mb-1">地址：新北市淡水區英專路 151 號｜電話：(02) 1234-5678</p>
+    <p class="mb-0">© 2025 淡江飯店．保留所有權利</p>
+  </div>
+</footer>
+</body>
+</html>

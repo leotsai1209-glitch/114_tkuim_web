@@ -1,0 +1,80 @@
+<h2>第7章 Class Diagram（修正版，避免線條遮擋）</h2>
+<svg width="1100" height="600" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .solid { stroke:#111; stroke-width:1.8; fill:none; }
+    .box { fill:#fff; stroke:#111; stroke-width:1.6; }
+    .title { font-weight:bold; font-size:15px; }
+    .note { font-size:12px; fill:#333; }
+    text { font-family:Arial, sans-serif; font-size:13px; }
+  </style>
+
+  <!-- User -->
+  <rect x="60" y="60" width="180" height="110" class="box"/>
+  <text x="135" y="80" class="title">User</text>
+  <text x="70" y="105">userID</text>
+  <text x="70" y="120">name</text>
+  <text x="70" y="135">email</text>
+  <text x="70" y="150">password</text>
+
+  <!-- Cart -->
+  <rect x="280" y="60" width="180" height="110" class="box"/>
+  <text x="345" y="80" class="title">Cart</text>
+  <text x="290" y="105">cartID</text>
+  <text x="290" y="120">userID</text>
+  <text x="290" y="135">itemList</text>
+
+  <!-- Order -->
+  <rect x="500" y="60" width="180" height="110" class="box"/>
+  <text x="560" y="80" class="title">Order</text>
+  <text x="510" y="105">orderID</text>
+  <text x="510" y="120">date</text>
+  <text x="510" y="135">totalAmount</text>
+  <text x="510" y="150">status</text>
+
+  <!-- Payment -->
+  <rect x="720" y="60" width="180" height="110" class="box"/>
+  <text x="780" y="80" class="title">Payment</text>
+  <text x="730" y="105">paymentID</text>
+  <text x="730" y="120">method</text>
+  <text x="730" y="135">status</text>
+  <text x="730" y="150">amount</text>
+
+  <!-- OrderItem -->
+  <rect x="500" y="240" width="180" height="130" class="box"/>
+  <text x="555" y="260" class="title">OrderItem</text>
+  <text x="510" y="285">orderItemID</text>
+  <text x="510" y="300">orderID</text>
+  <text x="510" y="315">productID</text>
+  <text x="510" y="330">quantity</text>
+  <text x="510" y="345">subtotal</text>
+
+  <!-- Product -->
+  <rect x="720" y="240" width="180" height="120" class="box"/>
+  <text x="780" y="260" class="title">Product</text>
+  <text x="730" y="285">productID</text>
+  <text x="730" y="300">name</text>
+  <text x="730" y="315">price</text>
+  <text x="730" y="330">stock</text>
+  <text x="730" y="345">category</text>
+
+  <!-- 關聯 -->
+  <!-- User - Cart -->
+  <line x1="240" y1="115" x2="280" y2="115" class="solid"/>
+  <text x="245" y="105" class="note">1..1</text>
+
+  <!-- User - Order (改為避開Cart的折線) -->
+  <path d="M240 135 Q330 200 500 135" class="solid"/>
+  <text x="350" y="175" class="note">1..*</text>
+
+  <!-- Order - Payment -->
+  <line x1="680" y1="115" x2="720" y2="115" class="solid"/>
+  <text x="690" y="105" class="note">1..1</text>
+
+  <!-- Order - OrderItem -->
+  <line x1="590" y1="170" x2="590" y2="240" class="solid"/>
+  <text x="595" y="200" class="note">1..*</text>
+
+  <!-- OrderItem - Product -->
+  <line x1="680" y1="300" x2="720" y2="300" class="solid"/>
+  <text x="690" y="290" class="note">*..1</text>
+</svg>
