@@ -1,0 +1,5 @@
+### 健康檢查
+GET http://localhost:3001/health
+
+### 查詢報名資料
+GET http://localhost:3001/api/signup

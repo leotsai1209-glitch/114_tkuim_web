@@ -1,0 +1,6 @@
+exit
+cd ../server
+db.participants.find()
+show collections
+use week11
+show dbs
