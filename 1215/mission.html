@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TKU：） — Mission</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="bg">
+    <div class="starfield"></div>
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="./index.html">
+      <span class="dot"></span> TKU：）
+    </a>
+    <nav class="nav">
+      <a class="navlink" href="./index.html">首頁</a>
+      <a class="navlink active" href="./mission.html">任務頁</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card float">
+      <div class="row">
+        <div>
+          <div class="pill">Mission Control</div>
+          <h1 class="title small">探索任務面板</h1>
+          <p class="subtitle">
+            點「完成」切換狀態；右上角可以切換顯示篩選。
+          </p>
+        </div>
+
+        <div class="controls">
+          <select id="filter" class="select">
+            <option value="all">顯示：全部</option>
+            <option value="todo">顯示：未完成</option>
+            <option value="done">顯示：已完成</option>
+          </select>
+          <a class="btn" href="./index.html">← 回首頁</a>
+        </div>
+      </div>
+
+      <div id="list" class="list"></div>
+    </section>
+
+    <section class="footer card">
+      <div class="footerRow">
+        <span class="muted">Tip：善用淡江大學的教學與數位資源，有助於提升學習效率與實務能力。</span>
+        <span class="muted">例如課程、作業或專題管理。</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tasks = [
+      { id: 1, title: "認識淡江大學校園與辦學理念", tag: "UI", done: true },
+      { id: 2, title: "規劃個人學習與修課方向", tag: "PAGE", done: false },
+      { id: 3, title: "培養資訊與數位應用能力", tag: "VIBE", done: false },
+      { id: 4, title: "拓展國際視野與跨域能力", tag: "REQ", done: true },
+    ];
+
+    const listEl = document.getElementById("list");
+    const filterEl = document.getElementById("filter");
+
+    function badge(tag) {
+      return `<span class="badge">${tag}</span>`;
+    }
+
+    function statusPill(done) {
+      return done
+        ? `<span class="status ok">已完成</span>`
+        : `<span class="status wait">未完成</span>`;
+    }
+
+    function render() {
+      const mode = filterEl.value;
+      const filtered = tasks.filter(t => {
+        if (mode === "todo") return !t.done;
+        if (mode === "done") return t.done;
+        return true;
+      });
+
+      listEl.innerHTML = filtered.map(t => `
+        <div class="item card">
+          <div class="itemLeft">
+            <div class="itemTitle">${t.title}</div>
+            <div class="itemMeta">${badge(t.tag)} ${statusPill(t.done)}</div>
+          </div>
+          <button class="btn small" data-id="${t.id}">
+            ${t.done ? "撤銷" : "完成"}
+          </button>
+        </div>
+      `).join("");
+
+      [...listEl.querySelectorAll("button[data-id]")].forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = Number(btn.dataset.id);
+          const target = tasks.find(x => x.id === id);
+          target.done = !target.done;
+          render();
+        });
+      });
+    }
+
+    filterEl.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+:root{
+  --bg: #070914;
+  --card: rgba(255,255,255,.08);
+  --stroke: rgba(255,255,255,.14);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.65);
+  --accent: #8b5cf6;
+  --accent2:#22d3ee;
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
+  --radius: 18px;
+  --blur: 14px;
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(139,92,246,.25), transparent 60%),
+              radial-gradient(900px 600px at 80% 30%, rgba(34,211,238,.20), transparent 55%),
+              var(--bg);
+  overflow-x:hidden;
+}
+
+.bg{ position:fixed; inset:0; pointer-events:none; }
+.glow{
+  position:absolute; width:560px; height:560px; border-radius:999px;
+  filter: blur(40px);
+  opacity:.35;
+}
+.g1{ left:-120px; top:-120px; background: radial-gradient(circle, var(--accent), transparent 60%); }
+.g2{ right:-160px; bottom:-160px; background: radial-gradient(circle, var(--accent2), transparent 60%); }
+
+.starfield{
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.8) 60%, transparent 61%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.6) 60%, transparent 61%),
+    radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,.5) 60%, transparent 61%),
+    radial-gradient(1px 1px at 15% 55%, rgba(255,255,255,.5) 60%, transparent 61%);
+  opacity:.6;
+  animation: drift 12s linear infinite;
+}
+
+@keyframes drift{
+  0%{ transform: translateY(0); }
+  100%{ transform: translateY(18px); }
+}
+
+.topbar{
+  position:sticky; top:0; z-index:10;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 20px;
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.brand{
+  display:flex; gap:10px; align-items:center;
+  color: var(--text); text-decoration:none; font-weight:700;
+  letter-spacing:.3px;
+}
+.dot{
+  width:10px; height:10px; border-radius:999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 0 18px rgba(139,92,246,.55);
+}
+
+.nav{ display:flex; gap:10px; }
+.navlink{
+  color: var(--muted); text-decoration:none;
+  padding:8px 12px; border-radius:999px;
+  border:1px solid transparent;
+}
+.navlink:hover{ color: var(--text); border-color: rgba(255,255,255,.12); }
+.navlink.active{
+  color: var(--text);
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+}
+
+.container{
+  max-width: 980px;
+  margin: 26px auto 40px;
+  padding: 0 18px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+}
+
+.hero{ padding: 26px; }
+.footer{ padding: 16px 18px; margin-top: 16px; }
+.footerRow{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.muted{ color: var(--muted); font-size: 14px; }
+
+.pill{
+  display:inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.title{
+  margin: 12px 0 10px;
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: -.6px;
+}
+.title.small{ font-size: 34px; }
+.subtitle{
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 10px; }
+
+.btn{
+  appearance:none; border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.26); background: rgba(255,255,255,.10); }
+.btn.primary{
+  border-color: rgba(139,92,246,.45);
+  background: linear-gradient(135deg, rgba(139,92,246,.25), rgba(34,211,238,.12));
+}
+.btn.small{ padding: 8px 10px; border-radius: 10px; font-size: 14px; }
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.mini{ padding: 14px; }
+.miniTitle{ font-weight:700; margin-bottom: 6px; }
+.miniText{ color: var(--muted); line-height: 1.6; font-size: 14px; }
+
+.float{ animation: floaty 5.6s ease-in-out infinite; }
+@keyframes floaty{
+  0%,100%{ transform: translateY(0px); }
+  50%{ transform: translateY(-8px); }
+}
+
+.row{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap: 14px; flex-wrap:wrap;
+}
+
+.controls{ display:flex; gap:10px; align-items:center; }
+.select{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  outline:none;
+}
+
+.list{ margin-top: 14px; display:flex; flex-direction:column; gap: 10px; }
+.item{
+  padding: 14px;
+  display:flex; justify-content:space-between; align-items:center;
+  gap: 14px;
+}
+.itemTitle{ font-weight:700; }
+.itemMeta{ margin-top: 8px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+.badge{
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--muted);
+}
+
+.status{
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+}
+.status.ok{
+  background: rgba(34,211,238,.14);
+  border-color: rgba(34,211,238,.35);
+}
+.status.wait{
+  background: rgba(139,92,246,.14);
+  border-color: rgba(139,92,246,.35);
+}
+
+/* 重力波效果：index 的按鈕切換 */
+body.warp .starfield{ opacity:.9; filter: saturate(1.2); }
+body.warp .card{ box-shadow: 0 22px 90px rgba(0,0,0,.55); transform: translateY(-2px); }
+body.warp .glow{ opacity:.55; }
+
+@media (max-width: 860px){
+  .grid{ grid-template-columns: 1fr; }
+  .title{ font-size: 36px; }
+}
