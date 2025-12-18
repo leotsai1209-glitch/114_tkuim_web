@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mission Control — Protected</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="stars">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Protected Module</h1>
+          <div class="sub">帶 <code>Authorization: Bearer &lt;token&gt;</code> 呼叫受保護 API</div>
+          <div class="nav">
+            <a href="./index.html">Auth Gate</a>
+            <a href="./protected.html">Protected</a>
+            <a href="./errors.html">Error Lab</a>
+          </div>
+        </div>
+      </div>
+      <div class="pill">AUTH REQUIRED</div>
+    </header>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;">
+      <section class="card">
+        <div class="card-hd">
+          <h2>Token / User</h2>
+          <p>沒登入時呼叫會顯示 401；登入後應成功。</p>
+        </div>
+        <div class="card-bd">
+          <div class="k">token</div>
+          <div class="mono" id="tokenBox">—</div>
+          <div style="height:10px"></div>
+          <div class="k">user (local)</div>
+          <pre class="mono" id="userBox">—</pre>
+
+          <div class="actions">
+            <button class="ok" id="btnMe">Call /auth/me</button>
+            <button id="btnProtected">Call Protected API</button>
+            <button class="danger" id="btnLogout">Logout</button>
+          </div>
+
+          <div class="status" id="status">Status: ready</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-hd">
+          <h2>Response Console</h2>
+          <p>這裡會顯示 <b>HTTP 狀態碼</b> + 回應內容（老師要看的）。</p>
+        </div>
+        <div class="card-bd">
+          <div class="mono" id="respBox">—</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    renderStorage($("tokenBox"), $("userBox"));
+
+    $("btnMe").addEventListener("click", async ()=>{
+      setStatus($("status"), "Calling /auth/me …");
+      const r = await apiCall(window.ROUTE_ME, { auth:true });
+      showResponse($("respBox"), r);
+      setStatus($("status"), r.ok ? "OK " : `Failed (HTTP ${r.status})`, r.ok ? "ok" : "bad");
+    });
+
+    $("btnProtected").addEventListener("click", async ()=>{
+      setStatus($("status"), "Calling protected API …");
+      const r = await apiCall(window.ROUTE_PROTECTED, { auth:true });
+      showResponse($("respBox"), r);
+      setStatus($("status"), r.ok ? "OK " : `Failed (HTTP ${r.status})`, r.ok ? "ok" : "bad");
+    });
+
+    $("btnLogout").addEventListener("click", ()=>{
+      clearAuth();
+      location.href = "./index.html";
+    });
+  </script>
+</body>
+</html>

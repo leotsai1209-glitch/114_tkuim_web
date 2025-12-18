@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mission Control — Error Lab</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="stars">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Error Lab</h1>
+          <div class="sub">把錯誤情境「顯示出來」：401 / 404</div>
+          <div class="nav">
+            <a href="./index.html">Auth Gate</a>
+            <a href="./protected.html">Protected</a>
+            <a href="./errors.html">Error Lab</a>
+          </div>
+        </div>
+      </div>
+      <div class="pill">TEST MODE</div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-hd">
+          <h2>One-click Tests</h2>
+          <p>重點：你知道失敗時會回什麼狀態碼，而且前端會顯示。</p>
+        </div>
+        <div class="card-bd">
+          <div class="actions">
+            <button id="btn401">Test 401 (No token)</button>
+            <button class="danger" id="btn404">Test 404 (Invalid route)</button>
+            <button class="ok" id="btnValid">Test Protected (With token)</button>
+            <button class="danger" id="btnClear">Clear Token</button>
+          </div>
+
+          <div class="status" id="status">Status: ready</div>
+
+          <div class="small">
+             <b>Test 404</b> 會打不存在的 API，Response 會顯示 <b>HTTP 404</b>。<br/>
+             <b>Test 401</b> 會在沒有 token 下打受保護 API，Response 會顯示 <b>HTTP 401</b>。
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-hd">
+          <h2>Response Console</h2>
+          <p>務必 demo ：<b>HTTP 404</b> / <b>HTTP 401</b></p>
+        </div>
+        <div class="card-bd">
+          <div class="mono" id="respBox">—</div>
+          <div class="k" style="margin-top:12px;">token (localStorage)</div>
+          <div class="mono" id="tokenBox">—</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    renderStorage($("tokenBox"), null);
+
+    $("btn401").addEventListener("click", async ()=>{
+      // 確保沒有 token
+      clearAuth();
+      renderStorage($("tokenBox"), null);
+
+      setStatus($("status"), "Calling protected API without token …");
+      const r = await apiCall(window.ROUTE_PROTECTED, { auth:false }); // 不帶 token
+      showResponse($("respBox"), r);
+      setStatus($("status"), `Done (HTTP ${r.status})`, r.ok ? "ok" : "bad");
+    });
+
+    $("btn404").addEventListener("click", async ()=>{
+      setStatus($("status"), "Calling invalid route …");
+      const r = await apiCall(window.ROUTE_404, { auth:true }); // 帶不帶都行，重點是 route 不存在
+      showResponse($("respBox"), r);
+      setStatus($("status"), `Done (HTTP ${r.status})`, r.status === 404 ? "ok" : "bad");
+    });
+
+    $("btnValid").addEventListener("click", async ()=>{
+      setStatus($("status"), "Calling protected API with token …");
+      const r = await apiCall(window.ROUTE_PROTECTED, { auth:true }); // 帶 token
+      showResponse($("respBox"), r);
+      setStatus($("status"), r.ok ? "OK " : `Failed (HTTP ${r.status})`, r.ok ? "ok" : "bad");
+    });
+
+    $("btnClear").addEventListener("click", ()=>{
+      clearAuth();
+      renderStorage($("tokenBox"), null);
+      setStatus($("status"), "Token cleared.", "ok");
+      $("respBox").textContent = "—";
+    });
+  </script>
+</body>
+</html>

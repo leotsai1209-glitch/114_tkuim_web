@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mission Control — Auth Gate</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="stars">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Mission Control</h1>
+          <div class="sub">Week12 — Login / Signup (JWT)</div>
+          <div class="nav">
+            <a href="./index.html">Auth Gate</a>
+            <a href="./protected.html">Protected</a>
+            <a href="./errors.html">Error Lab</a>
+          </div>
+        </div>
+      </div>
+      <div class="pill">API: <span id="apiBaseText"></span></div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-hd">
+          <h2>Enter the Station</h2>
+          <p>註冊/登入後，token 會存到 <code>localStorage</code>。再到 Protected / Error Lab 測試 Bearer Token & 404。</p>
+        </div>
+        <div class="card-bd">
+          <div class="row">
+            <div>
+              <label>Email</label>
+              <input id="email" type="email" placeholder="student@example.com" autocomplete="email" />
+            </div>
+            <div>
+              <label>Password</label>
+              <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="btnLogin">Login</button>
+            <button id="btnSignup">Signup</button>
+            <button id="btnToProtected">Go to Protected →</button>
+          </div>
+
+          <div class="status" id="status">Status: idle</div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="card-hd">
+          <h2>Local Storage</h2>
+          <p class="small">token 有保存、前端知道怎麼帶 Bearer Token。</p>
+        </div>
+        <div class="card-bd">
+          <div class="kv">
+            <div>
+              <div class="k">token</div>
+              <div class="v" id="tokenText">—</div>
+            </div>
+            <div>
+              <div class="k">user</div>
+              <pre class="mono" id="userText">—</pre>
+            </div>
+          </div>
+          <div class="small">
+            只要改 <code>config.js</code> 的 API_BASE 和路由名稱就能用。
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    $("apiBaseText").textContent = window.API_BASE;
+
+    renderStorage($("tokenText"), $("userText"));
+
+    $("btnToProtected").addEventListener("click", ()=> location.href = "./protected.html");
+
+    $("btnSignup").addEventListener("click", async ()=>{
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      if(!email || !password) return setStatus($("status"), "請輸入 email / password", "bad");
+
+      setStatus($("status"), "Signing up…");
+      const r = await apiCall(window.ROUTE_SIGNUP, { method:"POST", body:{ email, password } });
+
+      if(!r.ok) return setStatus($("status"), `Signup failed (HTTP ${r.status})\n`+JSON.stringify(r.data,null,2), "bad");
+
+      // 支援 signup 有回 token / user 的情況
+      if(r.data?.token) setToken(r.data.token);
+      if(r.data?.user)  setUser(r.data.user);
+
+      renderStorage($("tokenText"), $("userText"));
+      setStatus($("status"), "Signup success \n你可以直接按 Login 或去 Protected 測試。", "ok");
+    });
+
+    $("btnLogin").addEventListener("click", async ()=>{
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      if(!email || !password) return setStatus($("status"), "請輸入 email / password", "bad");
+
+      setStatus($("status"), "Logging in…");
+      const r = await apiCall(window.ROUTE_LOGIN, { method:"POST", body:{ email, password } });
+
+      if(!r.ok) return setStatus($("status"), `Login failed (HTTP ${r.status})\n`+JSON.stringify(r.data,null,2), "bad");
+
+      const token = r.data?.token;
+      if(!token) return setStatus($("status"), "Login 回傳沒有 token，請檢查後端回傳格式", "bad");
+
+      setToken(token);
+      if(r.data?.user) setUser(r.data.user);
+
+      renderStorage($("tokenText"), $("userText"));
+      setStatus($("status"), "Login success \nToken 已保存到 localStorage。", "ok");
+    });
+  </script>
+</body>
+</html>
