@@ -1,133 +1,199 @@
-const API_URL = "http://127.0.0.1:3000/api/events";
+const API = "http://127.0.0.1:3000/api/events";
 
-// 小工具：支援 id 或 name 兩種抓法
-function pickField(key) {
-  return (
-    document.getElementById(key) ||
-    document.querySelector(`[name="${key}"]`)
-  );
+// 小工具：訊息框
+function showMsg(el, text, type = "ok") {
+  if (!el) return;
+  el.textContent = text;
+  el.classList.add("show");
+  el.classList.remove("ok", "bad");
+  el.classList.add(type === "ok" ? "ok" : "bad");
+}
+function hideMsg(el) {
+  if (!el) return;
+  el.classList.remove("show", "ok", "bad");
+  el.textContent = "";
 }
 
-function pickListContainer() {
-  return document.getElementById("eventList") || document.querySelector("#eventList, [data-event-list]");
+function badge(status) {
+  const cls = status === "open" ? "open" : "closed";
+  return `<span class="badge ${cls}">${status}</span>`;
 }
 
-async function loadEvents() {
-  const list = pickListContainer();
-  if (!list) {
-    console.warn("找不到活動列表容器，請在 HTML 放 <div id='eventList'></div> 或 <div data-event-list></div>");
-    return;
+async function safeJson(res) {
+  const text = await res.text();
+  try { return JSON.parse(text); } catch { return { raw: text }; }
+}
+
+/* =========================
+   index.html：新增活動 + 快速查看
+========================= */
+async function initCreatePage() {
+  const form = document.getElementById("createForm");
+  if (!form) return;
+
+  const msg = document.getElementById("createMsg");
+  const apiStatus = document.getElementById("apiStatus");
+  const countEl = document.getElementById("count");
+
+  // 快速檢查 API / 筆數
+  try {
+    const res = await fetch(API);
+    const data = await safeJson(res);
+    if (res.ok && data.success) {
+      if (apiStatus) apiStatus.textContent = "OK";
+      if (countEl) countEl.textContent = Array.isArray(data.data) ? data.data.length : "-";
+    } else {
+      if (apiStatus) apiStatus.textContent = "異常";
+      if (countEl) countEl.textContent = "-";
+    }
+  } catch {
+    if (apiStatus) apiStatus.textContent = "連不到";
+    if (countEl) countEl.textContent = "-";
   }
 
-  list.textContent = "載入中...";
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideMsg(msg);
+
+    const body = {
+      title: document.getElementById("title").value.trim(),
+      date: document.getElementById("date").value,
+      location: document.getElementById("location").value.trim(),
+      capacity: Number(document.getElementById("capacity").value),
+      description: document.getElementById("description").value.trim(),
+      status: document.getElementById("status").value,
+    };
+
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await safeJson(res);
+
+      if (!res.ok) {
+        showMsg(msg, `新增失敗：HTTP ${res.status} ${data.message || ""}`, "bad");
+        return;
+      }
+      if (!data.success) {
+        showMsg(msg, `新增失敗：${data.message || "success=false"}`, "bad");
+        return;
+      }
+
+      showMsg(msg, "新增成功 ✅", "ok");
+      alert("新增成功！");
+      form.reset();
+    } catch (err) {
+      showMsg(msg, "新增失敗：Failed to fetch（後端沒開 / CORS）", "bad");
+    }
+  });
+}
+
+/* =========================
+   list.html：活動列表渲染
+========================= */
+async function loadList() {
+  const tbody = document.getElementById("eventsTbody");
+  const msg = document.getElementById("listMsg");
+  const count = document.getElementById("listCount");
+  if (!tbody) return;
+
+  hideMsg(msg);
+  tbody.innerHTML = `<tr><td colspan="6" style="color:#9fb0d0">載入中...</td></tr>`;
 
   try {
-    const res = await fetch(API_URL);
-    const result = await res.json();
+    const res = await fetch(API);
+    const data = await safeJson(res);
 
-    if (!result.success) {
-      list.textContent = "載入失敗（API success=false）";
+    if (!res.ok) {
+      tbody.innerHTML = "";
+      showMsg(msg, `載入失敗：HTTP ${res.status}`, "bad");
+      return;
+    }
+    if (!data.success || !Array.isArray(data.data)) {
+      tbody.innerHTML = "";
+      showMsg(msg, `載入失敗：${data.message || "資料格式錯誤"}`, "bad");
       return;
     }
 
-    const events = result.data || [];
-    if (events.length === 0) {
-      list.textContent = "目前沒有活動";
+    if (count) count.textContent = data.data.length;
+
+    if (data.data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="color:#9fb0d0">目前沒有活動</td></tr>`;
       return;
     }
 
-    list.innerHTML = "";
-    events.forEach((e) => {
-      const div = document.createElement("div");
-      div.style.border = "1px solid #ccc";
-      div.style.margin = "8px 0";
-      div.style.padding = "8px";
-
-      div.innerHTML = `
-        <strong>${e.title ?? "(no title)"}</strong><br>
-        日期：${(e.date ?? "").toString().slice(0, 10)}<br>
-        地點：${e.location ?? ""}<br>
-        名額：${e.capacity ?? ""}<br>
-        狀態：${e.status ?? ""}<br>
-        說明：${e.description ?? ""}
+    tbody.innerHTML = data.data.map(ev => {
+      const dateStr = (ev.date || "").slice(0, 10);
+      return `
+        <tr>
+          <td><strong>${escapeHtml(ev.title || "")}</strong><div style="color:#9fb0d0;font-size:12px;">${escapeHtml(ev.description || "")}</div></td>
+          <td>${escapeHtml(dateStr)}</td>
+          <td>${escapeHtml(ev.location || "")}</td>
+          <td>${Number(ev.capacity ?? 0)}</td>
+          <td>${badge(ev.status || "open")}</td>
+          <td>
+            <button class="btn small danger" data-del="${ev._id}">刪除</button>
+          </td>
+        </tr>
       `;
-      list.appendChild(div);
+    }).join("");
+
+    // 刪除按鈕（如果你的後端有做 DELETE 才會成功）
+    tbody.querySelectorAll("[data-del]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-del");
+        if (!confirm("確定要刪除這筆活動？")) return;
+
+        try {
+          const res = await fetch(`${API}/${id}`, { method: "DELETE" });
+          const data = await safeJson(res);
+
+          if (!res.ok) {
+            alert(`刪除失敗：HTTP ${res.status}\n${data.message || ""}`);
+            return;
+          }
+          if (!data.success) {
+            alert(`刪除失敗：${data.message || "success=false"}`);
+            return;
+          }
+
+          alert("刪除成功 ✅");
+          loadList();
+        } catch {
+          alert("刪除失敗：Failed to fetch");
+        }
+      });
     });
-  } catch (err) {
-    console.error(err);
-    list.textContent = "載入失敗（Failed to fetch / 後端沒開 / CORS）";
+
+  } catch {
+    tbody.innerHTML = "";
+    showMsg(msg, "載入失敗：Failed to fetch（後端沒開 / CORS）", "bad");
   }
 }
 
-async function createEvent(evt) {
-  // 防止 form submit 刷新頁面
-  if (evt && typeof evt.preventDefault === "function") evt.preventDefault();
+function initListPage() {
+  const tbody = document.getElementById("eventsTbody");
+  if (!tbody) return;
 
-  const titleEl = pickField("title");
-  const dateEl = pickField("date");
-  const locationEl = pickField("location");
-  const capacityEl = pickField("capacity");
-  const descriptionEl = pickField("description");
-  const statusEl = pickField("status");
+  const btnReload = document.getElementById("btnReload");
+  if (btnReload) btnReload.addEventListener("click", loadList);
 
-  // 如果抓不到欄位，直接在 console 告訴你缺哪個
-  const missing = [];
-  if (!titleEl) missing.push("title");
-  if (!dateEl) missing.push("date");
-  if (!locationEl) missing.push("location");
-  if (!capacityEl) missing.push("capacity");
-  if (!descriptionEl) missing.push("description");
-  if (!statusEl) missing.push("status");
-
-  if (missing.length) {
-    alert("你的 HTML 欄位 id/name 不對，缺少： " + missing.join(", "));
-    console.warn("缺少欄位：", missing);
-    return;
-  }
-
-  const payload = {
-    title: titleEl.value,
-    date: dateEl.value,
-    location: locationEl.value,
-    capacity: Number(capacityEl.value),
-    description: descriptionEl.value,
-    status: statusEl.value,
-  };
-
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    if (!data.success) {
-      alert("新增失敗：" + (data.message || "unknown"));
-      return;
-    }
-
-    alert("新增成功！");
-    await loadEvents();
-  } catch (err) {
-    console.error(err);
-    alert("新增失敗（Failed to fetch / 後端沒開 / CORS）");
-  }
+  loadList();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 自動載入列表
-  loadEvents();
+// 安全字串
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  // 自動綁定按鈕（建議你 HTML 用 id="btnCreate"）
-  const btn = document.getElementById("btnCreate");
-  if (btn) btn.addEventListener("click", createEvent);
-
-  // 如果你的新增區塊包在 form 裡，也會阻止 submit 刷新
-  const form = document.querySelector("form");
-  if (form) form.addEventListener("submit", createEvent);
-});
-
-// 讓你如果 HTML 還在用 onclick="createEvent()" 也能用
-window.createEvent = createEvent;
-window.loadEvents = loadEvents;
+// 啟動
+initCreatePage();
+initListPage();

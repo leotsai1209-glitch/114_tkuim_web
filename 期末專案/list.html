@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>活動報名系統｜活動列表</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>活動列表</h1>
+          <p>查詢 / 刪除（按鈕）/ 重新整理</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="btn" href="./index.html">新增活動</a>
+        <button class="btn primary" id="btnReload">重新整理</button>
+      </nav>
+    </header>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="hd">
+        <div>
+          <h2>所有活動</h2>
+          <div class="sub">資料來源：<code>GET /api/events</code></div>
+        </div>
+        <div class="kpi">
+          <div class="pill">總數：<span id="listCount">-</span></div>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div id="listMsg" class="msg"></div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>名稱</th>
+                <th>日期</th>
+                <th>地點</th>
+                <th>名額</th>
+                <th>狀態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTbody">
+              <!-- JS render -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="hint" style="margin-top:10px;">
+          已經到底囉。
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

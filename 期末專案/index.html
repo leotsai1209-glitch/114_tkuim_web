@@ -1,47 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>淡江大學活動報名系統</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>活動報名系統｜新增活動</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <h1>活動報名系統</h1>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>淡江大學活動報名系統</h1>
+          <p>新增活動 / 管理活動（Node + MongoDB）</p>
+        </div>
+      </div>
 
-  <h2>新增活動</h2>
-  <form id="createForm">
-    <div>
-      <input id="title" placeholder="活動名稱 title" required />
-    </div>
-    <div>
-      <input id="date" type="date" required />
-    </div>
-    <div>
-      <input id="location" placeholder="地點 location" required />
-    </div>
-    <div>
-      <input id="capacity" type="number" placeholder="名額 capacity" required />
-    </div>
-    <div>
-      <textarea id="description" placeholder="簡介 description"></textarea>
-    </div>
-    <div>
-      <select id="status">
-        <option value="open">open</option>
-        <option value="closed">closed</option>
-      </select>
-    </div>
+      <nav class="nav">
+        <a class="btn" href="./index.html">新增活動</a>
+        <a class="btn" href="./list.html">活動列表</a>
+      </nav>
+    </header>
 
-    <button type="submit">新增活動</button>
-  </form>
+    <main class="grid">
+      <section class="card">
+        <div class="hd">
+          <div>
+            <h2>新增活動</h2>
+            <div class="sub">填完送出後會自動寫入資料庫</div>
+          </div>
+        </div>
 
-  <p id="msg"></p>
+        <div class="bd">
+          <form id="createForm">
+            <div class="field">
+              <label for="title">活動名稱</label>
+              <input id="title" required placeholder="例如：系籃友誼賽" />
+            </div>
 
-  <h2>活動列表</h2>
-  <button id="reloadBtn" type="button">重新整理</button>
-  <div id="eventList"></div>
+            <div class="row2">
+              <div class="field">
+                <label for="date">日期</label>
+                <input id="date" type="date" required />
+              </div>
+              <div class="field">
+                <label for="capacity">名額</label>
+                <input id="capacity" type="number" min="1" required placeholder="例如：50" />
+              </div>
+            </div>
 
-  <!--  確保 script.js 在同一層資料夾 -->
+            <div class="field">
+              <label for="location">地點</label>
+              <input id="location" required placeholder="例如：淡江大學體育館" />
+            </div>
+
+            <div class="field">
+              <label for="description">簡介</label>
+              <textarea id="description" placeholder="例如：系籃招募與友誼賽，歡迎報名！"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="status">狀態</label>
+              <select id="status">
+                <option value="open">open</option>
+                <option value="closed">closed</option>
+              </select>
+              <div class="hint">open：可報名 / closed：已截止</div>
+            </div>
+
+            <button class="btn primary" type="submit">新增活動</button>
+            <div id="createMsg" class="msg"></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="hd">
+          <div>
+            <h2>快速查看</h2>
+            <div class="sub">到「活動列表」頁看完整清單</div>
+          </div>
+          <a class="btn" href="./list.html">前往列表 →</a>
+        </div>
+        <div class="bd">
+          <div class="kpi">
+            <div class="pill">API：<span id="apiStatus">未檢查</span></div>
+            <div class="pill">資料筆數：<span id="count">-</span></div>
+          </div>
+          <div class="hint" style="margin-top:10px;">
+            如果看到「Failed to fetch」，代表後端 3000 沒開或 CORS 沒過。
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
   <script src="./script.js"></script>
 </body>
 </html>
